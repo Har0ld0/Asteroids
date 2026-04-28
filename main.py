@@ -7,6 +7,7 @@ from asteroidfield import AsteroidField
 from constants import SCREEN_HEIGHT, SCREEN_WIDTH
 from logger import log_event, log_state
 from player import Player
+from score import Score
 from shot import Shot
 
 
@@ -27,6 +28,8 @@ def main():
     Shot.containers = (shots, updatable, drawable)
 
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    score = Score()
+    score_font = pygame.font.SysFont("Comic sans MS", 36)
 
     x = SCREEN_WIDTH / 2
     y = SCREEN_HEIGHT / 2
@@ -53,8 +56,13 @@ def main():
                     log_event("asteroid_shot")
                     shot.kill()
                     asteroid.split()
+                    score.add_score()
 
         screen.fill("black")
+        score_surface = score_font.render(f"{score.get_score()}", True, "white", None)
+        screen.blit(
+            score_surface, (SCREEN_WIDTH / 2, SCREEN_HEIGHT - (SCREEN_HEIGHT - 10))
+        )
 
         for object in drawable:
             object.draw(screen)
